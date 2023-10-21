@@ -1,11 +1,12 @@
 <?php
 
 namespace Database\Seeders;
-use App\Enums\RoleName;
+use App\Models\City;
 use App\Models\Role;
 use App\Models\User;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Enums\RoleName;
 use Illuminate\Database\Seeder;
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 class UserSeeder extends Seeder
 {
@@ -15,6 +16,7 @@ class UserSeeder extends Seeder
     public function run(): void
     {
         $this->createAdminUser();
+        $this->createVendorUser(); 
     }
 
     public function createAdminUser()
@@ -25,4 +27,21 @@ class UserSeeder extends Seeder
             'password' => bcrypt('Test@123'),
         ])->roles()->sync(Role::where('name', RoleName::ADMIN->value)->first());
     }
+    public function createVendorUser() 
+    { 
+        $vendor = User::create([ 
+            'name'     => 'Restaurant owner', 
+            'email'    => 'vendor@admin.com', 
+            'password' => bcrypt('Test@123'), 
+        ]); 
+ 
+        $vendor->roles()->sync(Role::where('name', RoleName::VENDOR->value)->first()); 
+ 
+        $vendor->restaurant()->create([ 
+            // 'city_id' => City::where('name', 'Nairobi')->value('id'), 
+            'city_id' => 1, 
+            'name'    => 'Restaurant 001', 
+            'address' => 'Address SJV14', 
+        ]); 
+    } 
 }
