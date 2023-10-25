@@ -19,8 +19,12 @@ export default {
                 primary: colors.green, 
                 danger: colors.red 
               }, 
+              
         },
     },
+ 
+     
+  
 
     plugins: [forms],
 };

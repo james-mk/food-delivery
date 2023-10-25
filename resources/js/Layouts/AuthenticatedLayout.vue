@@ -28,7 +28,6 @@ const showingNavigationDropdown = ref(false);
                                     />
                                 </Link>
                             </div>
-                
 
                             <!-- Navigation Links -->
                             <!-- <div
@@ -43,6 +42,7 @@ const showingNavigationDropdown = ref(false);
                             </div> -->
 
                             <NavLink
+                                v-if="can('restaurant.viewAny')"
                                 :href="route('admin.restaurants.index')"
                                 :active="
                                     route().current('admin.restaurants.index')
@@ -51,6 +51,15 @@ const showingNavigationDropdown = ref(false);
                                 Restaurants
                             </NavLink>
 
+                            <NavLink
+                                v-if="
+                                    can('product.viewAny') &&
+                                    can('category.viewAny')
+                                "
+                                :href="route('vendor.menu')"
+                                :active="route().current('vendor.menu')"
+                                >Restaurant menu
+                            </NavLink>
                         </div>
 
                         <div class="hidden sm:flex sm:items-center sm:ml-6">
@@ -192,7 +201,7 @@ const showingNavigationDropdown = ref(false);
 
             <!-- Page Heading -->
             <header
-                class="bg-white dark:bg-gray-800 shadow"
+                class="text-white bg-white dark:bg-gray-800 shadow"
                 v-if="$slots.header"
             >
                 <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
@@ -202,6 +211,14 @@ const showingNavigationDropdown = ref(false);
 
             <!-- Page Content -->
             <main>
+                <div
+                    v-if="$page.props.status"
+                    class="max-w-7xl mx-auto pt-6 px-4 sm:px-6 lg:px-8 text-white"
+                >
+                    <div class="alert alert-success">
+                        {{ $page.props.status }}
+                    </div>
+                </div>
                 <slot />
             </main>
         </div>

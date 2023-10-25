@@ -8,31 +8,36 @@ import SelectInput from '@/Components/SelectInput.vue'
 import TextareaInput from '@/Components/TextareaInput.vue'
 import TextInput from '@/Components/TextInput.vue'
  
-defineProps({
+const props = defineProps({
   cities: {
     type: Array
+  },
+  restaurant: {
+    type: Object
   }
 })
  
 const form = useForm({
-  restaurant_name: '',
-  email: '',
-  owner_name: '',
-  city_id: '',
-  address: ''
+  restaurant_name: props.restaurant.name,
+  email: props.restaurant.owner.email,
+  owner_name: props.restaurant.owner.name,
+  city: props.restaurant.city_id,
+  address: props.restaurant.address
 })
  
 const submit = () => {
-  form.post(route('admin.restaurants.store'))
+  form.patch(route('admin.restaurants.update', props.restaurant))
 }
 </script>
  
 <template>
-  <Head title="Add New Restaurant" />
+  <Head :title="'Edit ' + restaurant.name" />
  
   <AuthenticatedLayout>
     <template #header>
-      <h2 class="font-semibold text-xl  leading-tight">Add New Restaurant</h2>
+      <h2 class="font-semibold text-xl  leading-tight">
+        {{ 'Edit ' + restaurant.name }}
+      </h2>
     </template>
  
     <div class="py-12">
@@ -53,13 +58,8 @@ const submit = () => {
                 </div>
  
                 <div class="form-group">
-                  <InputLabel for="email" value="Owner Email" />
-                  <TextInput
-                    id="email"
-                    type="email"
-                    v-model="form.email"
-                    :disabled="form.processing"
-                  />
+                  <InputLabel for="email" value="Email" />
+                  <TextInput id="email" type="email" v-model="form.email" :disabled="true" />
                   <InputError :message="form.errors.email" />
                 </div>
  
@@ -69,16 +69,16 @@ const submit = () => {
                     id="owner_name"
                     type="text"
                     v-model="form.owner_name"
-                    :disabled="form.processing"
+                    :disabled="true"
                   />
                   <InputError :message="form.errors.owner_name" />
                 </div>
  
                 <div class="form-group">
-                  <InputLabel for="city_id" value="City" />
+                  <InputLabel for="city" value="City" />
                   <SelectInput
-                    id="city_id"
-                    v-model="form.city_id"
+                    id="city"
+                    v-model="form.city"
                     :options="cities"
                     option-value="id"
                     option-label="name"
@@ -88,7 +88,7 @@ const submit = () => {
                     }"
                     :disabled="form.processing"
                   />
-                  <InputError :message="form.errors.city_id" />
+                  <InputError :message="form.errors.city" />
                 </div>
  
                 <div class="form-group">
@@ -104,7 +104,7 @@ const submit = () => {
                 </div>
  
                 <div>
-                  <PrimaryButton :disabled="form.processing">Create New Restaurant</PrimaryButton>
+                  <PrimaryButton :processing="form.processing">Update Restaurant</PrimaryButton>
                 </div>
               </form>
             </div>
